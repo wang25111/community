@@ -53,7 +53,12 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.2.0</version>
         </dependency>
-
+<!--        Spring Email 用于发送（注册）邮件-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.6.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
