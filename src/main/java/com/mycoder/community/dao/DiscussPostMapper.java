@@ -2,6 +2,7 @@ package com.mycoder.community.dao;
 
 import com.mycoder.community.entity.DiscussPost;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public interface DiscussPostMapper {
     List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit);
 
     //查询贴子数量，支持两种方式查询
-    int selectDiscussPostRows(int userId);
+    int selectDiscussPostRows(@Param("userId") int userId);
 
 }
