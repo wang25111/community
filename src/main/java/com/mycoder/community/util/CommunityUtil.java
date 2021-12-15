@@ -16,10 +16,11 @@ public class CommunityUtil {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
-    //MD5加密
+    //MD5加密（处理密码）
     public static String md5(String key){
         if(StringUtils.isBlank(key)) return null;
         //返回加密结果
         return DigestUtils.md5DigestAsHex(key.getBytes());
     }
+
 }

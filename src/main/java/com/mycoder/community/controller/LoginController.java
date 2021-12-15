@@ -76,6 +76,7 @@ public class LoginController implements CommunityConstant {
     public String activation(Model model, @PathVariable("userId")int userId, @PathVariable("code")String code){
         int result = userService.activation(userId, code);
 
+        //根据result中的值，动态显示页面中的值（激活结果）
         if(result == ACTIVATION_SUCCESS){
             model.addAttribute("msg","激活成功，您的账号已经可以使用了！");
             model.addAttribute("target","/login");
@@ -86,21 +87,21 @@ public class LoginController implements CommunityConstant {
             model.addAttribute("msg", "激活失败，激活码不正确");
             model.addAttribute("target", "/index");
         }
-
+        //返回到的页面
         return "/site/operate-result";
     }
 
 
     @RequestMapping(path = "/kaptcha", method = RequestMethod.GET)
     public void getKaptcha(HttpServletResponse response, HttpSession session){
-        //生成验证码
+        //生成验证码：文字和图片
         String text = kaptchaProducer.createText();
         BufferedImage image = kaptchaProducer.createImage(text);
 
-        //验证码存入session
+        //验证码文字存入session
         session.setAttribute("kaptcha", text);
 
-        //将图片传给浏览器
+        //将验证码图片传给浏览器，并显示
         response.setContentType("image/png");
         try {
             OutputStream os = response.getOutputStream();
@@ -143,5 +144,42 @@ public class LoginController implements CommunityConstant {
     public String logout(@CookieValue("ticket") String ticket){
         userService.logout(ticket);
         return "redirect:/login";
+    }
+
+    @GetMapping("/forget")
+    public String getForget(){
+        return "/site/forget";
+    }
+
+    @GetMapping ("/forget/code")
+    public String getCode(String email, Model model, HttpSession session){
+        Map<String, Object> map = userService.sentCode(email);
+        if(map.containsKey("code")){
+            session.setAttribute("code", map.get("code"));
+            session.setAttribute("email", map.get("email"));
+        }else{
+            model.addAttribute("emailMsg", map.get("emailMsg"));
+        }
+        return "/site/forget";
+    }
+
+    @PostMapping("/forget")
+    public String reSetPassword(String email, String code, String newPassword, HttpSession session, Model model){
+        //先验证码和邮箱是否一致
+        if(!email.equals(session.getAttribute("email")) || !code.equals(session.getAttribute("code"))){
+            model.addAttribute("codeMsg", "验证码不正确");
+            return "site/forget";
+        }
+
+        Map<String, Object> map = userService.reSetPassword(email,newPassword);
+        if(map.containsKey("newPassword")){
+            model.addAttribute("msg", "密码重置成功");
+            model.addAttribute("target","/login");
+            return "/site/operate-result";
+        }else{
+            model.addAttribute("emailMsg", map.get("emailMsg"));
+            model.addAttribute("newPasswordMsg", map.get("newPasswordMsg"));
+            return "/site/forget";
+        }
     }
 }

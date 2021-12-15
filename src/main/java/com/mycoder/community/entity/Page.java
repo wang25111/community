@@ -10,7 +10,6 @@ public class Page {
     private int current = 1;
     //每页数量
     private int limit = 10;
-
     //数据总行数
     private int rows;
     //查询路径，复用分页链接
@@ -35,6 +34,7 @@ public class Page {
         int from = current - 2;
         return from < 1 ? 1 : from;
     }
+
     //获取终止页码，显示后两页
     public int getTo(){
         int to = current + 2;
@@ -42,10 +42,12 @@ public class Page {
         return to > totalPage ? totalPage : to;
     }
 
+
+    //属性的get、set方法
     public int getCurrent() {
         return current;
     }
-
+    //需要判断
     public void setCurrent(int current) {
         if(current >= 1){
             this.current = current;
@@ -55,7 +57,7 @@ public class Page {
     public int getLimit() {
         return limit;
     }
-
+    //需要判断
     public void setLimit(int limit) {
         if(limit >= 1 && limit <= 100){
             this.limit = limit;
@@ -65,7 +67,7 @@ public class Page {
     public int getRows() {
         return rows;
     }
-
+    //需要判断
     public void setRows(int rows) {
         if(rows >= 0){
             this.rows = rows;

@@ -106,10 +106,12 @@ public class UserService implements CommunityConstant {
 
         //发送注册邮件
         Context context = new Context();
+        //模板中需要动态设置的数据：email、url
         context.setVariable("email", user.getEmail());
         //url = http://localhost:8080/community/activation/id/激活码
         String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
+        //将数据 和 模板处理成字符串
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活账号" , content);
 
@@ -126,7 +128,7 @@ public class UserService implements CommunityConstant {
             userMapper.updateStatus(userId, 1);
             return ACTIVATION_SUCCESS;
         }else{
-            return ACTIVATION_SUCCESS;
+            return ACTIVATION_FAILURE;
         }
     }
 
@@ -179,4 +181,72 @@ public class UserService implements CommunityConstant {
     public void logout(String ticket){
         loginTicketMapper.updateStatus(ticket, 1);
     }
+
+    /**向邮箱发送一个验证码*/
+    public Map<String, Object> sentCode(String email){
+        Map<String, Object> map = new HashMap<>();
+        //邮箱为空
+        if(email == null || StringUtils.isBlank(email)){
+            map.put("emailMsg", "邮箱不能为空");
+            return map;
+        }
+
+        //邮箱不存在时
+        User user = userMapper.selectByEmail(email);
+        if(user == null){
+            map.put("emailMsg", "邮箱不存在");
+            return map;
+        }
+
+        //发送邮件
+        Context context = new Context();
+        //数据：用户邮箱、验证码
+        String code = CommunityUtil.generateUUID().substring(0, 4);
+        context.setVariable("email", email);
+        context.setVariable("code", code);
+        //模板 + 数据
+        String content = templateEngine.process("/mail/forget", context);
+        mailClient.sendMail(email, "coder-community 重置密码", content);
+
+        map.put("code", code);
+        map.put("email", email);
+        return map;
+    }
+
+    /**忘记密码时，重置密码*/
+    public Map<String, Object> reSetPassword(String email, String newPassWord){
+        Map<String, Object> map = new HashMap<>();
+
+        //邮箱为空
+        if(email == null || StringUtils.isBlank(email)){
+            map.put("emailMsg", "邮箱不能为空");
+            return map;
+        }
+
+        //密码长度不够
+        if(newPassWord == null || StringUtils.isBlank(newPassWord) || newPassWord.length() < 8){
+            map.put("newPasswordMsg", "密码长度至少为8位");
+            return map;
+        }
+
+        //邮箱不存在时
+        User user = userMapper.selectByEmail(email);
+        if(user == null){
+            map.put("emailMsg", "邮箱不存在");
+            return map;
+        }
+
+        //通过验证，新密码加密，并更新密码
+        newPassWord = CommunityUtil.md5(newPassWord + user.getSalt());
+        map.put("newPassword", newPassWord);
+        userMapper.updatePassword(user.getId(), newPassWord);
+
+        return map;
+    }
+
+    /**根据 凭证（String） 查询 LoginTicket 对象*/
+    public LoginTicket findLoginTicket(String ticket){
+        return loginTicketMapper.selectByTicket(ticket);
+    }
+
 }
