@@ -55,7 +55,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
         }
     }
 
-    //请求完成后清理保存的用户
+    //请求完成后清理保存的用户，springMVC使用的是线程池，为了避免前世的影响，需要清除
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         hostHolder.clear();

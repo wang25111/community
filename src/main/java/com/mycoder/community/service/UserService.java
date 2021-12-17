@@ -249,4 +249,35 @@ public class UserService implements CommunityConstant {
         return loginTicketMapper.selectByTicket(ticket);
     }
 
+    /**更新用户头像的url*/
+    public int updateHeadUrl(int userId, String url){
+        return userMapper.updateHeader(userId, url);
+    }
+
+    /**更新用户的密码*/
+    public Map<String, Object> updatePassword(int userId, String oldPassword, String newPassword){
+        Map<String, Object> map = new HashMap<>();
+        //判断原密码是否为空
+        if(StringUtils.isBlank(oldPassword)){
+            map.put("oldPasswordMsg", "原密码不能为空");
+            return map;
+        }
+        //判断原密码是否正确
+        User user = userMapper.selectById(userId);
+        oldPassword = CommunityUtil.md5(oldPassword + user.getSalt());
+        if(!oldPassword.equals(user.getPassword())){
+            map.put("oldPasswordMsg", "密码不正确");
+            return map;
+        }
+
+        //判断新密码是否符合规范
+        if(StringUtils.isBlank(newPassword) || newPassword.length() < 8){
+            map.put("newPasswordMsg", "新密码长度至少8位");
+            return map;
+        }
+        //先加密，再更新
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
+        userMapper.updatePassword(userId, newPassword);
+        return map;
+    }
 }
