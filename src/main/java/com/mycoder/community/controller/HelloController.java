@@ -39,6 +39,17 @@ public class HelloController {
     public String getDao(){
         return alphaService.find();
     }
+
+    @PostMapping("/ajax")
+    @ResponseBody
+    public String testAjax(String name, int age){
+        //通过ajax获取前台数据
+        System.out.println(name);
+        System.out.println(age);
+
+        //返回数据给前台
+        return CommunityUtil.getJSONString(200, "IDEA OK!", null);
+    }
 }
 
 //====================================第二天================================================

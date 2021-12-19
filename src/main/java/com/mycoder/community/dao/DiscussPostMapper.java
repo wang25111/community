@@ -19,4 +19,9 @@ public interface DiscussPostMapper {
     //查询贴子数量，支持两种方式查询
     int selectDiscussPostRows(@Param("userId") int userId);
 
+    //插入帖子
+    int insertDiscussPost(DiscussPost discussPost);
+
+    /**根据帖子的id查询帖子*/
+    DiscussPost selectDiscussPost(int id);
 }
