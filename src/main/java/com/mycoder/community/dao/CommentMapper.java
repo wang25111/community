@@ -17,4 +17,7 @@ public interface CommentMapper {
 
     //查询某一帖子（评论）的评论数量
     public int selectCommentCount(int entityType, int entityId);
+
+    //插入一条评论
+    public int insertComment(Comment comment);
 }
