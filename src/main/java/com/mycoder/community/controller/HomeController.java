@@ -8,6 +8,7 @@ import com.mycoder.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -52,5 +53,10 @@ public class HomeController {
         //"discussPosts"用在index.html中
         model.addAttribute("discussPosts", discussPosts);
         return "/index";
+    }
+
+    @GetMapping("/error")
+    public String getErrorPage(){
+        return "/error/500";
     }
 }

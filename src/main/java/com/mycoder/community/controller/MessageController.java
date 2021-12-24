@@ -110,7 +110,8 @@ public class MessageController {
         return "/site/letter-detail";
     }
 
-    /**根据消息列表，获取未读消息的id*/
+
+    /**根据消息列表，获取未读消息的id， 供上一条方法调用*/
     private List<Integer> getUnreadLettersIds(List<Message> messageList){
         User curUser = hostHolder.getUser();
         List<Integer> ids = new ArrayList<>();
@@ -124,7 +125,8 @@ public class MessageController {
         return ids;
     }
 
-    /**根据会话id查询会话的目标用户*/
+
+    /**根据会话id查询会话的目标用户，供上上条方法调用*/
     private User getLetterTarget(String conversationId){
         String[] ids = conversationId.split("_");
         int id0 = Integer.parseInt(ids[0]);
@@ -136,6 +138,7 @@ public class MessageController {
         else
             return userService.findUserById(id0);
     }
+
 
     @PostMapping("/letter/send")
     @ResponseBody
