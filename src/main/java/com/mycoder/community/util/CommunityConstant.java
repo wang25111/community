@@ -27,9 +27,13 @@ public interface CommunityConstant {
     /**勾选记住我 的登录凭证超时时间: 14 day*/
     int REMEMBER_EXPIRED_SECONDS = 3600 * 24 * 14;
 
-    /**针对帖子的评论（评论）*/
+    /**实体类型：帖子*/
     int ENTITY_TYPE_POST = 1;
 
-    /**针对评论的评论（回复）*/
+    /**实体类型：评论*/
     int ENTITY_TYPE_COMMENT = 2;
+
+    /**实体类型：用户*/
+    int ENTITY_TYPE_USER = 3;
+
 }

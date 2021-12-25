@@ -3,9 +3,7 @@ package com.mycoder.community.controller.advice;
 import com.mycoder.community.util.CommunityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +17,7 @@ import java.io.PrintWriter;
  */
 
 //处理注解为Controller的异常
-@RestControllerAdvice(annotations = Controller.class)
+//@RestControllerAdvice(annotations = Controller.class)
 public class ExceptionAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);

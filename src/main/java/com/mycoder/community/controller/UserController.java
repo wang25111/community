@@ -2,7 +2,10 @@ package com.mycoder.community.controller;
 
 import com.mycoder.community.annotation.LoginRequired;
 import com.mycoder.community.entity.User;
+import com.mycoder.community.service.FollowService;
+import com.mycoder.community.service.LikeService;
 import com.mycoder.community.service.UserService;
+import com.mycoder.community.util.CommunityConstant;
 import com.mycoder.community.util.CommunityUtil;
 import com.mycoder.community.util.HostHolder;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +34,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements CommunityConstant {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -50,12 +53,19 @@ public class UserController {
     @Autowired
     private HostHolder hostHolder;
 
+    @Autowired
+    private LikeService likeService;
+
+    @Autowired
+    private FollowService followService;
+
 
     @GetMapping("/setting")
     @LoginRequired              //登录才能调用此方法
     public String getSettingPage(){
         return "site/setting";
     }
+
 
     /**上传用户头像*/
     @PostMapping("/upload")
@@ -99,6 +109,7 @@ public class UserController {
 //        return "/index";//会发生异常
     }
 
+
     @GetMapping("/header/{fileName}")
     public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response){
         //文件后缀名
@@ -123,6 +134,7 @@ public class UserController {
         }
     }
 
+
     @LoginRequired
     @PostMapping("updatePassword")
     public String updatePassword(String oldPassword, String newPassword, Model model){
@@ -142,4 +154,36 @@ public class UserController {
 
         return "redirect:/logout";
     }
+
+
+    //个人主页(用户id为userId的主页)
+    @GetMapping("/profile/{userId}")
+    public String getProfilePaeg(@PathVariable("userId") int userId, Model model){
+        User user = userService.findUserById(userId);
+
+        if(user == null){
+            throw new RuntimeException("该用户不存在");
+        }
+
+        int likeCount = likeService.findUserLikeCount(userId);
+        //填入用户
+        model.addAttribute("user", user);
+        //填入点赞数量
+        model.addAttribute("likeCount", likeCount);
+        //填入关注数量
+        long followeeCount = followService.findFolloweeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount", followeeCount);
+        //填入粉丝的数量
+        long followerCount = followService.findFollowerCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followerCount", followerCount);
+        //填入登录用户的关注状态
+        boolean followed = false;
+        if(hostHolder.getUser() != null){
+            followed = followService.hasFollowed(hostHolder.getUser().getId(), userId, ENTITY_TYPE_USER);
+        }
+        model.addAttribute("hasFollowed", followed);
+
+        return "/site/profile";
+    }
+
 }
