@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Update;
  * @create 2021-12-13 16:50
  * 对表login_ticket进行操作
  */
+@Deprecated
 @Mapper
 public interface LoginTicketMapper {
     //插入凭证
