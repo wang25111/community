@@ -9,7 +9,7 @@ import java.util.Date;
 /**对应评论表*/
 public class Comment {
     int id;
-    int userId;
+    int userId;     //评论的拥有者
     int entityType; //针对哪一类型的评论（帖子的评论、评论的评论）
     int entityId;   //这一类型的id（帖子的id、评论的id）
     int targetId;   //针对哪一用户的评论（0 - 当前贴子的所有者，非0 - 对哪个用户的回复）

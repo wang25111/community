@@ -18,6 +18,7 @@ import java.util.Date;
  * @author cj
  * @create 2021-12-24 14:37
  */
+/**对所有service的调用记录日志*/
 @Component
 @Aspect
 public class ServiceLogAspect {
@@ -32,6 +33,8 @@ public class ServiceLogAspect {
    public void before(JoinPoint joinPoint){
         //用户[x.x.x.x]在 [xxxx] 访问了 [xxxxx]
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+       //引入消费者后，并非所有的service都通过controller调用，因此有可能为null
+       if(attributes == null) return;
 
        HttpServletRequest request = attributes.getRequest();
        //获取ip
