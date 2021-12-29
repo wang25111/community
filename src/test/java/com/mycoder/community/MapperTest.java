@@ -2,9 +2,11 @@ package com.mycoder.community;
 
 import com.mycoder.community.dao.DiscussPostMapper;
 import com.mycoder.community.dao.LoginTicketMapper;
+import com.mycoder.community.dao.MessageMapper;
 import com.mycoder.community.dao.UserMapper;
 import com.mycoder.community.entity.DiscussPost;
 import com.mycoder.community.entity.LoginTicket;
+import com.mycoder.community.entity.Message;
 import com.mycoder.community.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -109,6 +111,14 @@ public class MapperTest {
 
         loginTicket = loginTicketMapper.selectByTicket("2334");
         System.out.println(loginTicket);
+    }
+
+    @Autowired
+    MessageMapper messageMapper;
+    @Test
+    public void testMessageMapper(){
+        List<Message> like = messageMapper.selectNotices(155, "like", 0, 5);
+        System.out.println(like.toString());
     }
 
 }

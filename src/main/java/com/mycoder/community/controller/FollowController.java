@@ -97,6 +97,7 @@ public class FollowController implements CommunityConstant {
         return "/site/followee";
     }
 
+
     /**获取粉丝列表*/
     @GetMapping("/followers/{userId}")
     public String getFollowers(@PathVariable("userId") int userId, Page page, Model model){
@@ -121,6 +122,7 @@ public class FollowController implements CommunityConstant {
 
         return "/site/follower";
     }
+
 
     private boolean hasFollowed(int userId){
         if(hostHolder.getUser() == null) return false;
