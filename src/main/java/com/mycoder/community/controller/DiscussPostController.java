@@ -1,10 +1,8 @@
 package com.mycoder.community.controller;
 
 import com.mycoder.community.annotation.LoginRequired;
-import com.mycoder.community.entity.Comment;
-import com.mycoder.community.entity.DiscussPost;
-import com.mycoder.community.entity.Page;
-import com.mycoder.community.entity.User;
+import com.mycoder.community.entity.*;
+import com.mycoder.community.event.EventProducer;
 import com.mycoder.community.service.CommentService;
 import com.mycoder.community.service.DiscussPostService;
 import com.mycoder.community.service.LikeService;
@@ -42,6 +40,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     LikeService likeService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     @PostMapping("/add")
     @ResponseBody
     @LoginRequired
@@ -57,6 +58,15 @@ public class DiscussPostController implements CommunityConstant {
         post.setUserId(user.getId());
         post.setCreateTime(new Date());
         discussPostService.addDiscussPost(post);
+
+        //触发事件：发帖
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityId(post.getId())
+                .setEntityType(ENTITY_TYPE_POST);
+        
+        eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "发布成功");
     }

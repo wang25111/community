@@ -1,8 +1,11 @@
 package com.mycoder.community.event;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mycoder.community.entity.DiscussPost;
 import com.mycoder.community.entity.Event;
 import com.mycoder.community.entity.Message;
+import com.mycoder.community.service.DiscussPostService;
+import com.mycoder.community.service.ElasticsearchService;
 import com.mycoder.community.service.MessageService;
 import com.mycoder.community.util.CommunityConstant;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -27,6 +30,13 @@ public class EventConsumer implements CommunityConstant {
 
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    DiscussPostService discussPostService;
+
+    @Autowired
+    ElasticsearchService elasticsearchService;
+
 
     /**消费消息，将消息存入到message表中*/
     @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_FOLLOW, TOPIC_LIKE})
@@ -63,10 +73,27 @@ public class EventConsumer implements CommunityConstant {
             }
         }
 
-        //生成message的内容（字符串格式），并插入
+        //生成message的内容（字符串格式），并插入到数据库中
         message.setContent(JSONObject.toJSONString(content));
         messageService.addMessage(message);
     }
 
 
+    /**消费发帖事件*/
+    @KafkaListener(topics = TOPIC_PUBLISH)
+    public void handlePublish(ConsumerRecord record){
+        if(record == null || record.value() == null){
+            logger.error("消息的内容为空！");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if(event == null){
+            logger.error("消息格式错");
+            return;
+        }
+
+        DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
+        elasticsearchService.saveDiscussPost(post);
+    }
 }
