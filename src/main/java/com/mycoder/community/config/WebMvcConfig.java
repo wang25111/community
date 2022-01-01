@@ -1,7 +1,6 @@
 package com.mycoder.community.config;
 
 import com.mycoder.community.controller.interceptor.AlphaInterceptor;
-import com.mycoder.community.controller.interceptor.LoginRequiredInterceptor;
 import com.mycoder.community.controller.interceptor.LoginTicketInterceptor;
 import com.mycoder.community.controller.interceptor.MessageInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     AlphaInterceptor alphaInterceptor;
 
-    @Autowired
-    LoginTicketInterceptor loginTicketInterceptor;
+    /*引入了security，因此不再需要登录拦截器*/
+    //@Autowired
+    //LoginRequiredInterceptor loginRequiredInterceptor;
 
     @Autowired
-    LoginRequiredInterceptor loginRequiredInterceptor;
+    LoginTicketInterceptor loginTicketInterceptor;
 
     @Autowired
     MessageInterceptor messageInterceptor;
@@ -40,8 +40,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.jpg", "/**/*.png", "/**/*.jpeg", "/**/*.gif");
 
 
-        registry.addInterceptor(loginRequiredInterceptor)  //注册拦截器
-                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.jpg", "/**/*.png", "/**/*.jpeg", "/**/*.gif");
+//        registry.addInterceptor(loginRequiredInterceptor)  //注册登录拦截器
+//                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.jpg", "/**/*.png", "/**/*.jpeg", "/**/*.gif");
 
 
         registry.addInterceptor(messageInterceptor)  //注册拦截器

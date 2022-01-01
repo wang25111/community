@@ -136,7 +136,7 @@ public class UserController implements CommunityConstant {
 
 
     @LoginRequired
-    @PostMapping("updatePassword")
+    @PostMapping("/updatePassword")
     public String updatePassword(String oldPassword, String newPassword, Model model){
         User user = hostHolder.getUser();
 

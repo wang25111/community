@@ -70,4 +70,12 @@ public class HomeController implements CommunityConstant {
     public String getErrorPage(){
         return "/error/500";
     }
+
+    /**权限不足时的处理*/
+    @GetMapping("/denied")
+    public String getDeniedPage(){
+        return "/error/404";
+    }
+
+
 }

@@ -65,7 +65,7 @@ public class DiscussPostController implements CommunityConstant {
                 .setUserId(user.getId())
                 .setEntityId(post.getId())
                 .setEntityType(ENTITY_TYPE_POST);
-        
+
         eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "发布成功");
@@ -104,12 +104,13 @@ public class DiscussPostController implements CommunityConstant {
                 commentVo.put("comment", comment);
                 //评论的作者
                 commentVo.put("user", userService.findUserById(comment.getUserId()));
+                //评论的点赞状态
+                likeStatus = hostHolder.getUser() == null ? 0 : likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId());
+                commentVo.put("likeStatus", likeStatus);
                 //评论的点赞数量
                 likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, comment.getId());
                 commentVo.put("likeCount", likeCount);
-                //评论的点赞状态
-                likeStatus = likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId());
-                commentVo.put("likeStatus", likeStatus);
+
 
                 //查询评论的回复信息，根据评论的id查询到的就是回复
                 List<Comment> replyList = commentService.findCommentByEntity(
@@ -130,7 +131,7 @@ public class DiscussPostController implements CommunityConstant {
                         likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, reply.getId());
                         replyVo.put("likeCount", likeCount);
                         //回复的点赞状态
-                        likeStatus = likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, reply.getId());
+                        likeStatus = hostHolder.getUser() == null ? 0 : likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, reply.getId());
                         replyVo.put("likeStatus", likeStatus);
 
                         replyVoList.add(replyVo);
