@@ -45,11 +45,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                         "/unfollow",
                         "/followees/**",
                         "/followers/**",
-                        "/discuss/add",
-                        "/comment/add"
+                        "/discuss/add/**",
+                        "/comment/add/**"
                 ).hasAnyAuthority(
-                        AUTHORITY_USER, AUTHORITY_MODERATOR, AUTHORITY_MODERATOR
-                ).anyRequest().permitAll();//其它请求，全部允许
+                        AUTHORITY_USER, AUTHORITY_MODERATOR, AUTHORITY_ADMIN
+                )
+                .antMatchers(
+                        "/discuss/top",
+                        "/discuss/wonderful"
+                ).hasAnyAuthority(AUTHORITY_MODERATOR, AUTHORITY_ADMIN)
+                .antMatchers(
+                        "/discuss/delete"
+                ).hasAnyAuthority(
+                        AUTHORITY_ADMIN
+                )
+                .anyRequest().permitAll()//其它请求，全部允许
+                .and().csrf().disable();//关闭csrf检查了........
+
 
         //权限不够的处理
         http.exceptionHandling()

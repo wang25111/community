@@ -39,6 +39,7 @@ public class ElasticsearchService {
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
 
+
     /**将帖子添加到ES服务器中*/
     public void saveDiscussPost(DiscussPost post){
         discussPostRepository.save(post);
