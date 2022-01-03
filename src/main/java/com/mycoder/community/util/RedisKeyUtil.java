@@ -14,11 +14,16 @@ public class RedisKeyUtil {
     //被关注的实体（用户、帖子...）
     private static final String PREFIX_FOLLOWEE = "followee";
     //验证码前缀
-    public static final String PREFIX_KAPTCHA = "kaptcha";
+    private static final String PREFIX_KAPTCHA = "kaptcha";
     //登录凭证前缀
-    public static final String PREFIX_TICKET = "ticket";
+    private static final String PREFIX_TICKET = "ticket";
     //用户前缀
-    public static final String PREFIX_USER = "user";
+    private static final String PREFIX_USER = "user";
+    //独立访客（不重复的ip）
+    private static final String PREFIX_UV = "uv";
+    //日活跃用户
+    private static final String PREFIX_DAU = "dau";
+
 
 
     //某个实体的赞
@@ -59,6 +64,26 @@ public class RedisKeyUtil {
     /**生成缓存的用户对应的key*/
     public static String getUserKey(int userId){
         return PREFIX_USER + SPLIT + userId;
+    }
+
+    /**单日UV @param 日期**/
+    public static String getUVKey(String date){
+        return PREFIX_UV + SPLIT + date;
+    }
+
+    /**区间UV @param 日期**/
+    public static String getUVKey(String startDate, String endDate){
+        return PREFIX_UV + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    /*单日DAU @param 日期**/
+    public static String getDAUKey(String date){
+        return PREFIX_DAU + SPLIT + date;
+    }
+
+    /*区间DAU @param 日期**/
+    public static String getDAUKey(String startDate, String endDate){
+        return PREFIX_DAU + SPLIT + startDate + SPLIT + endDate;
     }
 
 }
