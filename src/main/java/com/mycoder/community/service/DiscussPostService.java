@@ -22,8 +22,8 @@ public class DiscussPostService {
     SensitiveFilter filter;
 
     //按条件查询帖子
-    public List<DiscussPost> findDiscussPosts(int userId, int offSet, int limit){
-        return discussPostMapper.selectDiscussPosts(userId, offSet, limit);
+    public List<DiscussPost> findDiscussPosts(int userId, int offSet, int limit, int orderMode){
+        return discussPostMapper.selectDiscussPosts(userId, offSet, limit, orderMode);
     }
 
     //按userId查询帖子数量
@@ -64,5 +64,10 @@ public class DiscussPostService {
 
     public int updateType(int id, int type){
         return discussPostMapper.updateType(id, type);
+    }
+
+    /**更新帖子分数*/
+    public int updateScore(int id, double score){
+        return discussPostMapper.updateScore(id, score);
     }
 }

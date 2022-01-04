@@ -8,7 +8,9 @@ import com.mycoder.community.service.CommentService;
 import com.mycoder.community.service.DiscussPostService;
 import com.mycoder.community.util.CommunityConstant;
 import com.mycoder.community.util.HostHolder;
+import com.mycoder.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +38,9 @@ public class CommentController implements CommunityConstant {
     @Autowired
     DiscussPostService discussPostService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**添加评论，专门针对帖子的评论？如何判断评论是给帖子的还是给评论的？ 并发布通知*/
     @PostMapping("/add/{postId}")
     public String addComment(Comment comment, @PathVariable("postId") int postId){
@@ -55,10 +60,15 @@ public class CommentController implements CommunityConstant {
         if(comment.getEntityType() == ENTITY_TYPE_POST){
             DiscussPost target = discussPostService.findDiscussPostById(comment.getEntityId());
             event.setEntityUserId(target.getUserId());
+
+            //计算帖子分数
+            String redisKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(redisKey, postId);
         }else{
             Comment target = commentService.findCommentById(comment.getEntityId());
             event.setEntityUserId(target.getUserId());
         }
+
         //生产事件
         eventProducer.fireEvent(event);
 
