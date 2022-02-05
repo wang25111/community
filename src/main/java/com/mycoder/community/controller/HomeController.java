@@ -36,6 +36,11 @@ public class HomeController implements CommunityConstant {
     @Autowired
     LikeService likeService;
 
+    @GetMapping("/")
+    public String getPage(){
+        return "forward:index";
+    }
+
     @RequestMapping(path = "/index",method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page,
                                @RequestParam(name = "orderMode", defaultValue = "0") int orderMode){

@@ -28,7 +28,6 @@ import java.util.Date;
 @Service
 @Scope("prototype")
 public class AlphaService {
-
     public AlphaService(){
         System.out.println("构造方法调用了--");
     }

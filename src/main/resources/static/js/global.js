@@ -1,5 +1,5 @@
 //在任何界面都能引用这个变量
-var CONTEXT_PATH = "/community";
+var CONTEXT_PATH = "";
 
 
 window.alert = function(message) {

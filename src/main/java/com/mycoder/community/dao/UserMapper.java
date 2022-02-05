@@ -2,6 +2,7 @@ package com.mycoder.community.dao;
 
 import com.mycoder.community.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author cj
@@ -11,17 +12,17 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
 
-    User selectById(int id);
+    User selectById(@Param("id") int id);
 
-    User selectByName(String userName);
+    User selectByName(@Param("userName") String userName);
 
-    User selectByEmail(String email);
+    User selectByEmail(@Param("email") String email);
 
     int insertUser(User user);
 
-    int updateStatus( int id,  int status);
+    int updateStatus( @Param("id") int id,  @Param("status") int status);
     //更改头像
-    int updateHeader(int id, String headerUrl);
+    int updateHeader(@Param("id") int id, @Param("headerUrl") String headerUrl);
 
-    int updatePassword(int id, String password);
+    int updatePassword(@Param("id") int id, @Param("password") String password);
 }
