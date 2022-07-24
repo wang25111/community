@@ -70,7 +70,9 @@ public class SensitiveFilter {
      * 将一段文本中的敏感词过滤掉
      * @param text 要判断的文本
      * @return 过滤过的文本
+     * 2022年05月04日进行改进，增加过滤的成功率
      * */
+
     public String filter(String text){
         if(StringUtils.isBlank(text)) return null;
 
@@ -82,31 +84,34 @@ public class SensitiveFilter {
         int start = 0;
         int end = 0;
 
+        int mark = 0;
+
         while(start < text.length()){
             char c = text.charAt(end);
-            //若c是字符串
-            if(isSymbol(c)){
-                if(temp == rootNode){
-                    start++;
-                    res.append(c);
-                }
-                end++;
-                continue;
-            }
+            temp = temp.child.get(c);
 
-            if(!temp.child.containsKey(c)){
-                res.append(c);
+            //字符不在树中，则保存下来
+            if(temp == null){
+                res.append(text.charAt(start));
                 end = ++start;
                 temp = rootNode;
-                //注意
-            }else if(temp.child.get(c).isEnd){
+                //注意，当是敏感词时，替换
+            }else if(temp.isEnd){
                 res.append(REPLACEMENT);
-                start = ++end;
+                mark = end++;
+                //替换完一个敏感词后还需要继续往后遍历，之后在遇到是敏感词结尾时不进行替换操作，而是直接跳过
+                while(end < text.length() && temp.child.containsKey(text.charAt(end))){
+                    temp = temp.getChildNode(text.charAt(end));
+                    if(temp.isEnd) mark = end;
+                    end++;
+                }
+
+                start = mark + 1;
+                end = start;
                 temp = rootNode;
-                //注意
-            }else if(!temp.child.get(c).isEnd){
+                //注意，是敏感词的前缀时，继续
+            }else{
                 end++;
-                temp = temp.child.get(c);
             }
         }
 

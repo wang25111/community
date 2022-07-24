@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                         "/user/updatePassword",
                         "/like",
                         "/letter/**",
-                        "/notice/**",
+
                         "/follow",
                         "/unfollow",
                         "/followees/**",

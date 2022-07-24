@@ -66,7 +66,7 @@ public class UserService implements CommunityConstant {
         return userMapper.selectByName(userName);
     }
 
-    //处理注册
+    //处理注册：信息的检查，返回激活邮件
     public Map<String, Object> register(User user){
         Map<String, Object> map = new HashMap<>();
         if(user == null){
@@ -184,13 +184,13 @@ public class UserService implements CommunityConstant {
         //生成登录凭证
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setUserId(user.getId());
-        loginTicket.setTicket(CommunityUtil.generateUUID());
+        loginTicket.setTicket(CommunityUtil.generateUUID());//用户登录成功后，生成一个ticket，是一个随机字符串
         loginTicket.setStatus(0);//0-有效
         loginTicket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
         //保存到数据库中
         //loginTicketMapper.insertLoginTicket(loginTicket);
 
-        //保存到redis中
+        //将ticket，保存到redis中
         String redisKey = RedisKeyUtil.getTicketKey(loginTicket.getTicket());
         redisTemplate.opsForValue().set(redisKey, loginTicket);// 值为json字符串
 

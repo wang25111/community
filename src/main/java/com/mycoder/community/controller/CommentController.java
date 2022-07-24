@@ -61,7 +61,7 @@ public class CommentController implements CommunityConstant {
             DiscussPost target = discussPostService.findDiscussPostById(comment.getEntityId());
             event.setEntityUserId(target.getUserId());
 
-            //计算帖子分数
+            //将被评论的帖子id存入的redis中，key为post:score，value为set类型，为了之后计算帖子分数
             String redisKey = RedisKeyUtil.getPostScoreKey();
             redisTemplate.opsForSet().add(redisKey, postId);
         }else{

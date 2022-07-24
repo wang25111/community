@@ -54,6 +54,7 @@ public class DiscussPostService {
                 .maximumSize(maxSize)
                 .expireAfterWrite(expireSeconds, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, List<DiscussPost>>() {
+                    //初始数据的来源
                     @Override
                     public  List<DiscussPost> load(String key) throws Exception {
                         if(key == null || key.length() == 0){

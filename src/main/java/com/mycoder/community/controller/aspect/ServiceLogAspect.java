@@ -46,4 +46,6 @@ public class ServiceLogAspect {
 
        logger.info(String.format("用户[%s], 在[%s], 访问了[%s].", ip, now, target));
    }
+
+
 }

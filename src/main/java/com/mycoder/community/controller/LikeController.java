@@ -67,7 +67,7 @@ public class LikeController implements CommunityConstant {
             eventProducer.fireEvent(event);
         }
 
-        //计算帖子分数
+        //将被点赞的帖子id存入的redis中，key为post:score，value为set类型，为了之后计算帖子分数
         if(entityType == ENTITY_TYPE_POST){
             String redisKey = RedisKeyUtil.getPostScoreKey();
             redisTemplate.opsForSet().add(redisKey, postId);

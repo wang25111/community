@@ -12,6 +12,8 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
  * @author cj
  * @create 2022-01-03 21:10
  */
+
+//初始化数据库中的任务，之后从数据库读取配置信息
 @Configuration
 public class QuartzConfig {
 

@@ -9,9 +9,9 @@ public class RedisKeyUtil {
     private static final String SPLIT = ":";
     private static final String PREFIX_ENTITY_LIKE ="like:entity";
     private static final String PREFIX_USER_LIKE ="like:user";
-    //(发起)关注的人
+    //(发起)关注的人，粉丝列表
     private static final String PREFIX_FOLLOWER = "follower";
-    //被关注的实体（用户、帖子...）
+    //被关注的实体（用户、帖子...），关注列表
     private static final String PREFIX_FOLLOWEE = "followee";
     //验证码前缀
     private static final String PREFIX_KAPTCHA = "kaptcha";
